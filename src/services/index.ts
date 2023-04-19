@@ -36,7 +36,7 @@ async function authenticate(data: ISignIn) {
   try {
     const res = await Axios.post('/login', data);
     if (res.status === 200) {
-      // localStorage.setItem('token', res.data.body.token);
+      localStorage.setItem('token', res.data.body.token);
       const authResData: IAuthResponse = res.data;
       return authResData;
     }
@@ -45,4 +45,9 @@ async function authenticate(data: ISignIn) {
     throw new Error(`${err}`);
   }
 }
-export { authenticate };
+
+/** Remove the token to log out the user */
+function logout() {
+  localStorage.removeItem('token');
+}
+export { authenticate, logout };

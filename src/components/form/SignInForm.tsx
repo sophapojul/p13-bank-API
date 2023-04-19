@@ -18,9 +18,7 @@ function SignInForm() {
   const navigate = useNavigate();
   const redirectPath = '/user';
   const onSubmit = async (credentials: ISignIn) => {
-    const data = await authenticate(credentials);
-    const token = data?.body?.token;
-    localStorage.setItem('token', token);
+    await authenticate(credentials);
     reset();
     navigate(redirectPath, { replace: true });
   };
