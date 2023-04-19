@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ISignIn } from '~/types';
+import { ISignIn, IProfile } from '~/types';
 
 export interface IAuthResponse {
   status: number;
@@ -8,6 +8,12 @@ export interface IAuthResponse {
   body: {
     token: string;
   };
+}
+
+export interface IUserResponse {
+  status: number;
+  message: string;
+  body: IProfile;
 }
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -45,9 +51,30 @@ async function authenticate(data: ISignIn) {
     throw new Error(`${err}`);
   }
 }
+/** Api call to get user informations
+ * @returns - Response data with user informations
+ * */
+async function getUser() {
+  try {
+    const authAxios = Axios.create({
+      baseURL: apiUrl,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
 
+    const res = await authAxios.post('/profile');
+    if (res.status === 200) {
+      const getUserData: IUserResponse = res.data;
+      return getUserData;
+    }
+    throw new Error(res.data.message);
+  } catch (err) {
+    throw new Error(`${err}`);
+  }
+}
 /** Remove the token to log out the user */
 function logout() {
   localStorage.removeItem('token');
 }
-export { authenticate, logout };
+export { authenticate, logout, getUser };

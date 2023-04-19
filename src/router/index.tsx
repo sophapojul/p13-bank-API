@@ -1,7 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '~/pages/home';
 import SignIn from '~/pages/signIn';
+import User from '~/pages/user';
 import Root from '~/routes';
+import PrivateRoutes from '~/routes/PrivateRoutes';
 
 /** React router definition */
 const router = createBrowserRouter([
@@ -19,8 +21,13 @@ const router = createBrowserRouter([
         element: <SignIn />,
       },
       {
-        path: 'user',
-        element: <div>User page</div>,
+        element: <PrivateRoutes />,
+        children: [
+          {
+            path: 'user',
+            element: <User />,
+          },
+        ],
       },
     ],
   },
