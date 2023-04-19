@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '~/pages/home';
+import SignIn from '~/pages/signIn';
 import Root from '~/routes';
 
 /** React router definition */
@@ -15,11 +16,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'sign-in',
-        element: <div>Sign In page</div>,
-      },
-      {
-        path: 'profile',
-        element: <div>Profile page</div>,
+        element: <SignIn />,
       },
       {
         path: 'user',
