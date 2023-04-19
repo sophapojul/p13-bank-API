@@ -48,7 +48,9 @@ async function authenticate(data: ISignIn) {
     }
     throw new Error(res.data.message);
   } catch (err) {
-    throw new Error(`${err}`);
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
   }
 }
 /** Api call to get user informations
@@ -70,7 +72,9 @@ async function getUser() {
     }
     throw new Error(res.data.message);
   } catch (err) {
-    throw new Error(`${err}`);
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
   }
 }
 /** Remove the token to log out the user */
