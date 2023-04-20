@@ -15,3 +15,8 @@ export type IProfile = {
   firstName: IUser['firstName'];
   lastName: IUser['lastName'];
 };
+
+export type IGetUser = {
+  firstName: IUser['firstName'];
+  lastName: IUser['lastName'];
+};

@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 
 import styles from '~/components/form/Form.module.scss';
 import { ISignIn, IUser } from '~/types';
+import { login } from '~/store/actions';
+import { useTypedDispatch, useTypedSelector } from '~/store/hooks';
 import FormField from '~/components/form/formField';
-import { authenticate } from '~/services';
 
 /**
  * Form to sign in
@@ -16,16 +17,23 @@ function SignInForm() {
 
   const label = 'Sign In';
   const navigate = useNavigate();
+  const dispatch = useTypedDispatch();
   const redirectPath = '/user';
+  const loading = useTypedSelector((state) => state.auth.loading);
+  const error = useTypedSelector((state) => state.auth.error);
   const onSubmit = async (credentials: ISignIn) => {
-    await authenticate(credentials);
+    await dispatch(login(credentials));
     reset();
     navigate(redirectPath, { replace: true });
   };
   useEffect(() => {
     setFocus('email');
   }, []);
-  return (
+  return loading ? (
+    <h2>Sign In Loading...</h2>
+  ) : error ? (
+    <h2>{error}</h2>
+  ) : (
     <main className={`${styles.main} ${styles.bgDark}`}>
       <section className={styles.signInContent}>
         <i className="fa fa-user-circle"></i>

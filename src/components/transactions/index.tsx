@@ -1,36 +1,36 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import Account from '~/components/account';
+import { fetchUser } from '~/store/actions';
+import { useTypedDispatch, useTypedSelector } from '~/store/hooks';
 import styles from '~/components/transactions/Transactions.module.scss';
-import { getUser } from '~/services';
 
 /**
  * Transactions page component
  * @returns React component that renders the transactions page
  */
 function Transactions() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-  });
-  const handleClick = () => {
-    navigate('/profile', { replace: true });
-  };
+  const dispatch = useTypedDispatch();
+  const signedInUser = useTypedSelector((state) => state.user);
+  const loading = useTypedSelector((state) => state.user.loading);
+  const error = useTypedSelector((state) => state.user.error);
+  const handleClick = () => {};
   useEffect(() => {
     (async () => {
-      const data = await getUser();
-      setUser(data.body);
+      dispatch(fetchUser());
     })();
-  }, []);
-  return (
+  }, [dispatch]);
+  return loading ? (
+    <h2>Loading...</h2>
+  ) : error ? (
+    <h2>{error}</h2>
+  ) : (
     <main className={`${styles.main} ${styles.bgDark}`}>
       <div className={styles.header}>
         <h1>
           Welcome back
           <br />
-          {user ? user.firstName : ''} {user ? user.lastName : ''}
+          {signedInUser.user?.firstName} {signedInUser.user?.lastName}
         </h1>
         <button
           type="button"

@@ -1,7 +1,8 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import logo from '~/assets/argentBankLogo.png';
-import { logout } from '~/services';
+import { logout, logoutUser } from '~/store/actions';
+import { useTypedSelector, useTypedDispatch } from '~/store/hooks';
 import styles from './Navbar.module.scss';
 
 /**
@@ -9,12 +10,12 @@ import styles from './Navbar.module.scss';
  * @returns React component for the navbar
  */
 function Navbar() {
-  const navigate = useNavigate();
-  const redirectPath = '/';
   const isSignedIn = !!localStorage.getItem('token');
+  const user = useTypedSelector((state) => state.user);
+  const dispatch = useTypedDispatch();
   const handleLogout = () => {
-    logout();
-    navigate(redirectPath, { replace: true });
+    dispatch(logout());
+    dispatch(logoutUser());
   };
   return (
     <nav className={styles.mainNav}>
@@ -27,11 +28,11 @@ function Navbar() {
         <h1 className={styles.srOnly}>Argent Bank</h1>
       </Link>
       <div>
-        {isSignedIn ? (
+        {isSignedIn && user ? (
           <>
             <NavLink to="/user" className={styles.mainNavItem}>
               <i className="fa fa-user-circle" aria-hidden="true"></i>
-              &nbsp;
+              &nbsp;{user.user?.firstName}
             </NavLink>
             <NavLink
               to="/"
