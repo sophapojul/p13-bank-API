@@ -28,7 +28,7 @@ function SignInForm() {
   };
   useEffect(() => {
     setFocus('email');
-  }, []);
+  }, [setFocus]);
   return loading ? (
     <h2>Sign In Loading...</h2>
   ) : error ? (

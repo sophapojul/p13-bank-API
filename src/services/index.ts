@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ISignIn, IProfile } from '~/types';
+import { ISignIn, IGetUser } from '~/types';
 
 export interface IAuthResponse {
   status: number;
@@ -13,7 +13,7 @@ export interface IAuthResponse {
 export interface IUserResponse {
   status: number;
   message: string;
-  body: IProfile;
+  body: IGetUser;
 }
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -77,8 +77,34 @@ async function getUser() {
     }
   }
 }
+
+/**
+ * Api call to update user informations
+ * @param data - user informations to update
+ * @returns - response data with user informations updated
+ */
+async function putProfile(data: IGetUser) {
+  try {
+    /** Set headers options with Authorization token from localStorage */
+    const authAxios = Axios.create({
+      baseURL: apiUrl,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    const res = await authAxios.put('/profile', data);
+    if (res.status === 200) {
+      const putProfileData: IUserResponse = res.data;
+      return putProfileData;
+    }
+    throw new Error(res.data.message);
+  } catch (err) {
+    throw new Error(`${err}`);
+  }
+}
+
 /** Remove the token to log out the user */
 function logout() {
   localStorage.removeItem('token');
 }
-export { authenticate, logout, getUser };
+export { authenticate, logout, getUser, putProfile };

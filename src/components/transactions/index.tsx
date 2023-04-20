@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Account from '~/components/account';
-import { fetchUser } from '~/store/actions';
+import { IGetUser } from '~/types';
+import { fetchUser, fetchProfile, profileToggleForm } from '~/store/actions';
 import { useTypedDispatch, useTypedSelector } from '~/store/hooks';
 import styles from '~/components/transactions/Transactions.module.scss';
 
@@ -10,16 +12,38 @@ import styles from '~/components/transactions/Transactions.module.scss';
  * @returns React component that renders the transactions page
  */
 function Transactions() {
+  const {
+    register,
+    reset,
+    setFocus,
+    handleSubmit,
+    formState: {},
+  } = useForm({
+    defaultValues: { firstName: '', lastName: '' },
+  });
   const dispatch = useTypedDispatch();
-  const signedInUser = useTypedSelector((state) => state.user);
+  const { user } = useTypedSelector((state) => state.user);
   const loading = useTypedSelector((state) => state.user.loading);
   const error = useTypedSelector((state) => state.user.error);
-  const handleClick = () => {};
+  const profileForm = useTypedSelector((state) => state.profile.profileForm);
+  // FIXME: setFocus not working
+  const onClick = () => {
+    dispatch(profileToggleForm());
+    reset(user);
+    setFocus('firstName');
+  };
+  const onSubmit: SubmitHandler<IGetUser> = async (data: IGetUser) => {
+    const { firstName, lastName } = data;
+    firstName && lastName && (await dispatch(fetchProfile(data)));
+    await dispatch(fetchUser());
+    dispatch(profileToggleForm());
+  };
   useEffect(() => {
+    setFocus('firstName');
     (async () => {
-      dispatch(fetchUser());
+      await dispatch(fetchUser());
     })();
-  }, [dispatch]);
+  }, [setFocus, dispatch]);
   return loading ? (
     <h2>Loading...</h2>
   ) : error ? (
@@ -30,15 +54,27 @@ function Transactions() {
         <h1>
           Welcome back
           <br />
-          {signedInUser.user?.firstName} {signedInUser.user?.lastName}
+          {profileForm && user?.firstName} {profileForm && user?.lastName}
         </h1>
-        <button
-          type="button"
-          onClick={handleClick}
-          className={styles.editButton}
-        >
-          Edit Name
-        </button>
+        {profileForm && (
+          <button type="button" onClick={onClick} className={styles.editButton}>
+            Edit Name
+          </button>
+        )}
+        {!profileForm && (
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+            <div>
+              <input type="text" {...register('firstName')} />
+              <input type="text" {...register('lastName')} />
+            </div>
+            <div>
+              <button type="submit">Save</button>
+              <button type="button" onClick={onClick}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
       </div>
       <h2 className={styles.srOnly}>Accounts</h2>
       <Account

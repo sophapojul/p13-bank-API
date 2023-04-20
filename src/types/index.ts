@@ -10,12 +10,6 @@ export type ISignIn = {
   password: IUser['password'];
 };
 
-export type IProfile = {
-  email: IUser['email'];
-  firstName: IUser['firstName'];
-  lastName: IUser['lastName'];
-};
-
 export type IGetUser = {
   firstName: IUser['firstName'];
   lastName: IUser['lastName'];
