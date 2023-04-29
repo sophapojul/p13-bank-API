@@ -1,4 +1,4 @@
-import { authenticate } from '~/services';
+import { authenticate, logout as removeToken } from '~/services';
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -91,7 +91,7 @@ const login = ({
 
 /** Logout action */
 const logout = () => (dispatch: AppDispatch) => {
-  localStorage.removeItem('token');
+  removeToken();
   dispatch(logoutAction());
 };
 
