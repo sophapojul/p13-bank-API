@@ -11,7 +11,8 @@
     "lint": "ESLINT_USE_FLAT_CONFIG=true eslint -c eslint.config.js",
     "lint:fix": "ESLINT_USE_FLAT_CONFIG=true eslint -c eslint.config.js --fix",
     "prepare": "husky install",
-    "cm": "cz"
+    "cm": "cz",
+    "doc": "typedoc src"
   },
   "dependencies": {
     "@redux-devtools/extension": "^3.2.5",
