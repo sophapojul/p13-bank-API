@@ -63,7 +63,6 @@ const logoutAction = (error?: string) => {
     },
   };
 };
-// FIXME: using token and dispatch
 /**
  * Login action
  * @param email password - Credentials to sign in with email and password
@@ -81,8 +80,6 @@ const login = ({
     try {
       await authenticate({ email, password });
       const token = localStorage.getItem('token');
-      // const token = localStorage.getItem('token')!;
-      // token ? await dispatch(loginSuccess(token)) : await dispatch(loginFailure('No token found'));
       token && dispatch(loginSuccess(token));
     } catch (err: unknown) {
       if (err instanceof Error) {
