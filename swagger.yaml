@@ -135,7 +135,7 @@ paths:
         '200':
           description: User transactions retrieved successfully
           schema:
-            $ref: '#/definitions/Transaction'
+            $ref: '#/definitions/TransactionResponse'
         '400':
           description: Invalid Fields
         '401':
@@ -259,7 +259,7 @@ definitions:
         type: string
       lastName:
         type: string
-  Transaction:
+  TransactionResponse:
     type: object
     properties:
       status:
@@ -267,14 +267,15 @@ definitions:
       message:
         type: string
       body:
-        type: object
-        properties:
-          title:
-            type: string
-          amount:
-            type: number
-          amountDescription:
-            type: string
+        type: array
+        items:
+          properties:
+            title:
+              type: string
+            amount:
+              type: number
+            amountDescription:
+              type: string
   TransactionDetailsBody:
     type: object
     properties:
